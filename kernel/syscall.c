@@ -102,6 +102,12 @@ extern uint64 sys_link(void);
 extern uint64 sys_mkdir(void);
 extern uint64 sys_close(void);
 
+// Tal
+extern uint64 sys_peterson_create(void);
+extern uint64 sys_peterson_aquire(void);
+extern uint64 sys_peterson_release(void);
+extern uint64 sys_peterson_destroy(void);
+
 // An array mapping syscall numbers from syscall.h
 // to the function that handles the system call.
 static uint64 (*syscalls[])(void) = {
@@ -126,6 +132,11 @@ static uint64 (*syscalls[])(void) = {
 [SYS_link]    sys_link,
 [SYS_mkdir]   sys_mkdir,
 [SYS_close]   sys_close,
+// Tal
+[SYS_peterson_create] sys_peterson_create,
+[SYS_peterson_aquire] sys_peterson_aquire,
+[SYS_peterson_release] sys_peterson_release,
+[SYS_peterson_destroy] sys_peterson_destroy,  
 };
 
 void

@@ -1,3 +1,4 @@
+
 struct stat;
 
 // system calls
@@ -22,6 +23,12 @@ int getpid(void);
 char* sbrk(int);
 int sleep(int);
 int uptime(void);
+
+// Tal
+int peterson_create(void);
+int peterson_aquire(int lock_id, int role);
+int peterson_release(int lock_id, int role);
+int peterson_destroy(int lock_id);
 
 // ulib.c
 int stat(const char*, struct stat*);
