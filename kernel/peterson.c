@@ -56,7 +56,7 @@ int peterson_aquire(int lock_id, int role){
 
     // Wait until the other is not interested or it's this role's turn
     while (lk->intrested[other] && lk->turn == role) {
-       
+        
         yield(); // To avoid busy waiting
     }
 
