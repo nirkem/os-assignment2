@@ -5,6 +5,7 @@
 int L;
 int index;
 
+// Aid calc functions
 int get_log2(int n) {
   int log = 0;
   while (n > 1) {
@@ -12,28 +13,6 @@ int get_log2(int n) {
     log++;
   }
   return log;
-}
-
-int get_my_lock_index(int pid, int level) {
-  int index = get_my_index(pid);
-  int shifts = L - level;
-  return index >> shifts;
-}
-
-int get_my_role(int pid, int level) {
-  int index = get_my_index(pid);
-  int shifts = L - 1 - level;
-  return (index & (1 << shifts)) >> shifts;
-}
-
-int get_my_index(int pid) {
-  return index;
-}
-
-int get_my_lock(int pid, int level) {
-  int lock_index = get_my_lock_index(pid, level);
-  int i = lock_index + (1 << level) - 1;
-  return i;
 }
 
 int power_of_two(int n) {
@@ -49,6 +28,26 @@ int power_of_two(int n) {
   return 1;
 }
 
+
+// Aid role & lock functions
+int get_my_lock_index(int pid, int level) {
+  int shifts = L - level;
+  return index >> shifts;
+}
+
+int get_my_role(int pid, int level) {
+  int shifts = L - 1 - level;
+  return (index & (1 << shifts)) >> shifts;
+}
+
+int get_my_lock(int pid, int level) {
+  int lock_index = get_my_lock_index(pid, level);
+  int i = lock_index + (1 << level) - 1;
+  return i;
+}
+
+
+// Task functions
 int tournament_create(int processes) {
   if (!power_of_two(processes) || processes > 16) {
     return -1;
