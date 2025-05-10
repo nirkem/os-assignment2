@@ -15,7 +15,7 @@ extern struct PetersonLock peterson_locks[NUM_PETERSON_LOCKS];
 // PetersonLock API
 int peterson_init(void);
 int peterson_create(void);
-int peterson_aquire(int lock_id, int role);
+int peterson_acquire(int lock_id, int role);
 int peterson_release(int lock_id, int role);
 int peterson_destroy(int lock_id);
 

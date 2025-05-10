@@ -23,6 +23,6 @@
 
 // Tal
 #define SYS_peterson_create 22
-#define SYS_peterson_aquire 23
+#define SYS_peterson_acquire 23
 #define SYS_peterson_release 24
 #define SYS_peterson_destroy 25

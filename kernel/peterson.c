@@ -40,7 +40,7 @@ int peterson_create(void){
 }
 
 // Acquire lock id as role
-int peterson_aquire(int lock_id, int role){
+int peterson_acquire(int lock_id, int role){
 
     if (lock_id < 0 || lock_id >= NUM_PETERSON_LOCKS || (role != 0 && role != 1) || !peterson_locks[lock_id].active)
         return -1;

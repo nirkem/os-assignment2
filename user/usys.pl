@@ -39,6 +39,6 @@ entry("uptime");
 
 # Tal
 entry("peterson_create");
-entry("peterson_aquire");
+entry("peterson_acquire");
 entry("peterson_release");
 entry("peterson_destroy");

@@ -16,7 +16,7 @@ main(void)
     int role = fork_ret > 0 ? 0 : 1; // parent gets role 0, child gets role 1
 
     for (int i = 0; i < 10; i++) {
-        if (peterson_aquire(lock_id, role) < 0) {
+        if (peterson_acquire(lock_id, role) < 0) {
             printf("Faild to aquire lock\n");
             exit(1);
         }

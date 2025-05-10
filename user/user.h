@@ -1,4 +1,3 @@
-
 struct stat;
 
 // system calls
@@ -23,10 +22,9 @@ int getpid(void);
 char* sbrk(int);
 int sleep(int);
 int uptime(void);
-
 // Tal
 int peterson_create(void);
-int peterson_aquire(int lock_id, int role);
+int peterson_acquire(int lock_id, int role);
 int peterson_release(int lock_id, int role);
 int peterson_destroy(int lock_id);
 
@@ -46,3 +44,14 @@ void free(void*);
 int atoi(const char*);
 int memcmp(const void *, const void *, uint);
 void *memcpy(void *, const void *, uint);
+
+// libtournament.c
+int tournament_release(void);
+int tournament_acquire(void);
+int tournament_create(int processes);
+int get_log2(int n);
+int get_my_lock_index(int pid, int level);
+int get_my_role(int pid, int level);
+int get_my_index(int pid);
+int get_my_lock(int pid, int level);
+int power_of_two(int n);
