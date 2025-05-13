@@ -53,7 +53,7 @@ int tournament_create(int processes) {
     return -1;
   }
 
-
+  index = 0;
   int lock_id;
   int i;
   int main_process_pid = getpid();
@@ -85,7 +85,7 @@ int tournament_create(int processes) {
   }
 
   L = get_log2(processes);
-  return 0;
+  return index;
 }
 
 int tournament_acquire(void) {
