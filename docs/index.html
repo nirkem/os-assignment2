@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Tournament Tree Lock</title>
+    <meta name="description" content="Watch processes race up a bracket of two-process Peterson locks until one wins the root and enters the critical section." />
+    <meta name="theme-color" content="#0c0c0e" />
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="glow" aria-hidden="true"></div>
+
+    <header class="wrap top">
+      <a class="back" href="https://nirmichalovitz.com/projects/xv6-kernel">
+        <svg class="icon" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M224,128a8,8,0,0,1-8,8H59.31l58.35,58.34a8,8,0,0,1-11.32,11.32l-72-72a8,8,0,0,1,0-11.32l72-72a8,8,0,0,1,11.32,11.32L59.31,120H216A8,8,0,0,1,224,128Z"/></svg>
+        xv6 Kernel case study
+      </a>
+      <a class="btn btn-ghost btn-sm" href="https://github.com/nirkem/os-assignment2">
+        <svg class="icon" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M208.31,75.68A59.78,59.78,0,0,0,202.93,28,8,8,0,0,0,196,24a59.75,59.75,0,0,0-48,24H124A59.75,59.75,0,0,0,76,24a8,8,0,0,0-6.93,4,59.78,59.78,0,0,0-5.38,47.68A58.14,58.14,0,0,0,56,104v8a56.06,56.06,0,0,0,48.44,55.47A39.8,39.8,0,0,0,96,192v8H72a24,24,0,0,1-24-24A40,40,0,0,0,8,136a8,8,0,0,0,0,16,24,24,0,0,1,24,24,40,40,0,0,0,40,40H96v16a8,8,0,0,0,16,0V192a24,24,0,0,1,48,0v40a8,8,0,0,0,16,0V192a39.8,39.8,0,0,0-8.44-24.53A56.06,56.06,0,0,0,216,112v-8A58.14,58.14,0,0,0,208.31,75.68ZM200,112a40,40,0,0,1-40,40H112a40,40,0,0,1-40-40v-8a41.74,41.74,0,0,1,6.9-22.48A8,8,0,0,0,80,73.83a43.81,43.81,0,0,1,.79-33.58,43.88,43.88,0,0,1,32.32,20.06A8,8,0,0,0,119.82,64h32.35a8,8,0,0,0,6.74-3.69,43.87,43.87,0,0,1,32.32-20.06A43.81,43.81,0,0,1,192,73.83a8.09,8.09,0,0,0,1,7.65A41.72,41.72,0,0,1,200,104Z"/></svg>
+        Source
+      </a>
+    </header>
+
+    <main>
+      <section class="wrap intro">
+        <h1>Tournament tree lock</h1>
+        <p class="lead">Processes race up a bracket of two-process Peterson locks. Only the winner of the root enters the critical section.</p>
+      </section>
+
+      <section class="wrap">
+        <div class="tt">
+          <div class="controls">
+            <div class="seg" role="group" aria-label="Number of processes">
+              <button type="button" class="seg-btn" data-n="2" aria-pressed="false">2</button>
+              <button type="button" class="seg-btn" data-n="4" aria-pressed="false">4</button>
+              <button type="button" class="seg-btn" data-n="8" aria-pressed="true">8</button>
+              <button type="button" class="seg-btn" data-n="16" aria-pressed="false">16</button>
+            </div>
+            <span class="mono-xs muted">processes</span>
+
+            <div class="actions">
+              <button type="button" id="tt-play" class="btn btn-primary">
+                <span data-when="paused" class="label">
+                  <svg class="icon" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M232.4,114.49,88.32,26.35a16,16,0,0,0-16.2-.3A15.86,15.86,0,0,0,64,39.87V216.13A15.94,15.94,0,0,0,80,232a16.07,16.07,0,0,0,8.36-2.35L232.4,141.51a15.81,15.81,0,0,0,0-27ZM80,215.94V40l143.83,88Z"/></svg>
+                  Play
+                </span>
+                <span data-when="playing" class="label" hidden>
+                  <svg class="icon" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M200,32H160a16,16,0,0,0-16,16V208a16,16,0,0,0,16,16h40a16,16,0,0,0,16-16V48A16,16,0,0,0,200,32Zm0,176H160V48h40ZM96,32H56A16,16,0,0,0,40,48V208a16,16,0,0,0,16,16H96a16,16,0,0,0,16-16V48A16,16,0,0,0,96,32Zm0,176H56V48H96Z"/></svg>
+                  Pause
+                </span>
+                <span data-when="finished" class="label" hidden>
+                  <svg class="icon" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M224,128a96,96,0,0,1-94.71,96H128A95.38,95.38,0,0,1,62.1,197.8a8,8,0,0,1,11-11.63A80,80,0,1,0,71.43,71.39a3.07,3.07,0,0,1-.26.25L44.59,96H72a8,8,0,0,1,0,16H24a8,8,0,0,1-8-8V56a8,8,0,0,1,16,0V85.8L60.25,60A96,96,0,0,1,224,128Z"/></svg>
+                  Run again
+                </span>
+              </button>
+              <button type="button" id="tt-step" class="btn btn-ghost">
+                <svg class="icon" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M200,32a8,8,0,0,0-8,8v69.23L72.43,34.45A15.95,15.95,0,0,0,48,47.88V208.12a16,16,0,0,0,24.43,13.43L192,146.77V216a8,8,0,0,0,16,0V40A8,8,0,0,0,200,32ZM64,207.93V48.05l127.84,80Z"/></svg>
+                Step
+              </button>
+              <button type="button" id="tt-reset" class="btn btn-ghost" aria-label="Reset">
+                <svg class="icon" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M224,128a96,96,0,0,1-94.71,96H128A95.38,95.38,0,0,1,62.1,197.8a8,8,0,0,1,11-11.63A80,80,0,1,0,71.43,71.39a3.07,3.07,0,0,1-.26.25L44.59,96H72a8,8,0,0,1,0,16H24a8,8,0,0,1-8-8V56a8,8,0,0,1,16,0V85.8L60.25,60A96,96,0,0,1,224,128Z"/></svg>
+              </button>
+              <label class="speed mono-xs muted">
+                Speed
+                <input id="tt-speed" type="range" min="1" max="5" value="3" />
+              </label>
+            </div>
+          </div>
+
+          <div class="body">
+            <div class="stage">
+              <svg id="tt-svg" role="img" aria-labelledby="tt-svg-title">
+                <title id="tt-svg-title">Tournament tree of Peterson locks</title>
+              </svg>
+              <p id="tt-status" class="status" aria-live="polite"></p>
+            </div>
+
+            <aside class="side">
+              <h2>Process <span id="tt-sel-id"></span></h2>
+              <p class="mono-sm muted">index <span id="tt-sel-index" class="ink"></span> = <span id="tt-sel-bits" class="accent"></span> in binary</p>
+              <p class="hint">Its bits pick its side of every lock: the highest bit at the root, the lowest at the leaf. Click any process to follow it.</p>
+              <ol id="tt-sel-path" class="path"></ol>
+
+              <dl class="stats">
+                <div><dt>Steps</dt><dd id="tt-steps">0</dd></div>
+                <div><dt>Got in</dt><dd id="tt-entered">0</dd></div>
+                <div><dt>Most inside</dt><dd id="tt-most">0</dd></div>
+              </dl>
+
+              <ol id="tt-log" class="log" aria-label="Recent events"></ol>
+            </aside>
+          </div>
+        </div>
+
+        <ul class="legend">
+          <li><span class="legend-flag" aria-hidden="true"></span> Interested flag raised</li>
+          <li><span class="legend-turn" aria-hidden="true"></span> Arrived last, so it waits</li>
+          <li><span class="legend-held" aria-hidden="true"></span> Lock won and held</li>
+        </ul>
+      </section>
+    </main>
+
+    <footer class="wrap foot">
+      <p>The same algorithm as <a href="https://github.com/nirkem/os-assignment2/blob/main/user/libtournament.c">libtournament.c</a>, simulated step by step. By <a href="https://nirmichalovitz.com">Nir Michalovitz</a>.</p>
+    </footer>
+
+    <script type="module" src="app.js"></script>
+  </body>
+</html>

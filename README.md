@@ -32,7 +32,13 @@ The library API (`user/libtournament.c`):
 
 `tournament N` runs a full round: every process takes the root lock, prints that it has it, and releases it. Then the parent waits for all of them and destroys the locks.
 
-There's also an [interactive version of the bracket](https://nirmichalovitz.com/demos/tournament-tree) that runs the same algorithm step by step in the browser.
+## The visualizer
+
+**[Watch the bracket run](https://nirkem.github.io/os-assignment2/)**: an interactive version of the tournament tree that runs the same algorithm step by step in the browser. Pick 2 to 16 processes, play or step through it, and click any process to see how the bits of its index choose its path.
+
+- `docs/sim.js` simulates the C code one action at a time: raise the flag, record the turn, wait, then climb, and release from the root down. A random scheduler picks which process moves next, the way real processes interleave.
+- `docs/app.js` draws the bracket as SVG. It's plain HTML, CSS and JavaScript with no build step, served by GitHub Pages from `docs/`.
+- `tests/sim.test.mjs` runs 3,000 random schedules for each of 2, 4, 8 and 16 processes. In every one, all processes finish, each enters the critical section exactly once, and two are never inside at the same time. Run it with `node tests/sim.test.mjs`.
 
 ## Build and run
 
@@ -53,5 +59,6 @@ At the xv6 prompt, run `peterson_test`, or `tournament 4` (any power of two up t
 | `user/peterson_test.c` | 1 | Two-process test |
 | `user/libtournament.c` | 2 | The tournament tree library |
 | `user/tournament.c` | 2 | `tournament N` |
+| `docs/`, `tests/` | 2 | The visualizer and its simulation tests |
 
 The original xv6 README and its credits are in [`README`](README), and the MIT license is in [`LICENSE`](LICENSE).
