@@ -28,8 +28,11 @@ The library API (`user/libtournament.c`):
 | `tournament_create(n)` | Creates `n - 1` Peterson locks, forks `n` processes and returns each its index `0` to `n - 1` |
 | `tournament_acquire()` | Wins every lock from this process's leaf to the root |
 | `tournament_release()` | Releases them from the root back down |
+| `tournament_destroy()` | Destroys the tournament's own locks, and no others |
 
 `tournament N` runs a full round: every process takes the root lock, prints that it has it, and releases it. Then the parent waits for all of them and destroys the locks.
+
+There's also an [interactive version of the bracket](https://nirmichalovitz.com/demos/tournament-tree) that runs the same algorithm step by step in the browser.
 
 ## Build and run
 

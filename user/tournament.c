@@ -39,9 +39,7 @@ int main(int argc, char* argv[]) {
   } 
 
   // delete the locks, in-case we want to run again later
-  for (int i = 0; i < processes; i++) {
-    peterson_destroy(i);
-  }
+  tournament_destroy();
 
   printf("All child processes have finished\n");
   exit(0);

@@ -4,6 +4,8 @@
 
 int L;
 int index;
+int locks[15];     // Peterson lock IDs in heap order: locks[0] is the root
+int lock_count;
 
 // Aid calc functions
 int get_log2(int n) {
@@ -43,7 +45,7 @@ int get_my_role(int pid, int level) {
 int get_my_lock(int pid, int level) {
   int lock_index = get_my_lock_index(pid, level);
   int i = lock_index + (1 << level) - 1;
-  return i;
+  return locks[i]; // the kernel's ID for this tree node, not the node index itself
 }
 
 
@@ -59,11 +61,15 @@ int tournament_create(int processes) {
   int main_process_pid = getpid();
   L = get_log2(processes);
 
+  // Keep the IDs the kernel hands back: they are only 0, 1, 2... if no other lock exists
+  lock_count = 0;
   for (i = 0; i < processes - 1; i++) {
     lock_id = peterson_create();
     if (lock_id < 0) {
+      tournament_destroy();
       return -1;
     }
+    locks[lock_count++] = lock_id;
   }
 
   // Fork processes and assign indices
@@ -86,6 +92,15 @@ int tournament_create(int processes) {
 
   L = get_log2(processes);
   return index;
+}
+
+// Destroy the locks this tournament created (call once, from the process that created it)
+int tournament_destroy(void) {
+  for (int i = 0; i < lock_count; i++) {
+    peterson_destroy(locks[i]);
+  }
+  lock_count = 0;
+  return 0;
 }
 
 int tournament_acquire(void) {

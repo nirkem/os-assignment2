@@ -49,6 +49,7 @@ void *memcpy(void *, const void *, uint);
 int tournament_release(void);
 int tournament_acquire(void);
 int tournament_create(int processes);
+int tournament_destroy(void);
 int get_log2(int n);
 int get_my_lock_index(int pid, int level);
 int get_my_role(int pid, int level);
