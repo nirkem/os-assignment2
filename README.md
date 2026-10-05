@@ -34,7 +34,7 @@ The library API (`user/libtournament.c`):
 
 ## The visualizer
 
-**[Watch the bracket run](https://nirkem.github.io/os-assignment2/)**: an interactive version of the tournament tree that runs the same algorithm step by step in the browser. Pick 2 to 16 processes, play or step through it, and click any process to see how the bits of its index choose its path.
+**[Watch the bracket run](https://nirkem.github.io/xv6-tournament-lock/)**: an interactive version of the tournament tree that runs the same algorithm step by step in the browser. Pick 2 to 16 processes, play or step through it, and click any process to see how the bits of its index choose its path.
 
 - `docs/sim.js` simulates the C code one action at a time: raise the flag, record the turn, wait, then climb, and release from the root down. A random scheduler picks which process moves next, the way real processes interleave.
 - `docs/app.js` draws the bracket as SVG. It's plain HTML, CSS and JavaScript with no build step, served by GitHub Pages from `docs/`.
